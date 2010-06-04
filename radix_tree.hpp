@@ -307,6 +307,8 @@ radix_tree<K, T>::erase(const K &key)
 
         delete child;
 
+        m_size--;
+
         if (parent == m_root)
                 return 1;
 
