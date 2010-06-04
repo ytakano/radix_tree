@@ -60,6 +60,8 @@ public:
 
         std::pair<iterator, bool> insert(const value_type &val);
         size_type                 erase(const K &key);
+        void                      prefix_match(const K &key,
+                                               std::vector<iterator> &vec);
         void                      greedy_match(const K &key,
                                                std::vector<iterator> &vec);
         iterator                  longest_match(const K &key);
@@ -116,13 +118,40 @@ radix_tree<K, T>::print_nodes(radix_tree_node<K, T> *node, std::string space)
                         std::cout << space << it->first << std::endl;
                 } else {
                         std::cout << space << "$end, "
-                                  << it->second->m_value.second << std::endl;
+                                  << it->second->m_value->second << std::endl;
                 }
 
                 print_nodes(it->second, space + "    ");
         }
 }
 #endif
+
+template <typename K, typename T>
+void
+radix_tree<K, T>::prefix_match(const K &key, std::vector<iterator> &vec)
+{
+        vec.clear();
+
+        if (m_root == NULL)
+                return;
+
+        radix_tree_node<K, T> *node;
+        K key_sub1, key_sub2;
+
+        node = find_node(key, m_root, 0);
+
+        if (node->m_is_leaf)
+                node = node->m_parent;
+
+        int len = radix_length(key) - node->m_depth;
+        key_sub1 = radix_substr(key, node->m_depth, len);
+        key_sub2 = radix_substr(node->m_key, 0, len);
+
+        if (key_sub1 != key_sub2)
+                return;
+
+        greedy_match(node, vec);
+}
 
 template <typename K, typename T>
 typename radix_tree<K, T>::iterator
@@ -149,7 +178,7 @@ radix_tree<K, T>::longest_match(const K &key)
         while (node != NULL) {
                 typename radix_tree_node<K, T>::it_child it;
                 it = node->m_children.find(nul);
-                if (it != node->m_children.end() && it->m_is_leaf)
+                if (it != node->m_children.end() && it->second->m_is_leaf)
                         return iterator(it->second);
 
                 node = node->m_parent;
@@ -217,12 +246,15 @@ radix_tree<K, T>::greedy_match(const K &key, std::vector<iterator> &vec)
 {
         radix_tree_node<K, T> *node;
 
+        vec.clear();
+
         if (m_root == NULL)
                 return;
 
         node = find_node(key, m_root, 0);
 
-        vec.clear();
+        if (node->m_is_leaf)
+                node = node->m_parent;
 
         greedy_match(node, vec);
 }
@@ -233,13 +265,14 @@ radix_tree<K, T>::greedy_match(radix_tree_node<K, T> *node,
                                std::vector<iterator> &vec)
 {
         if (node->m_is_leaf) {
-                vec.push_back(iterator(node->m_value));
+                vec.push_back(iterator(node));
                 return;
         }
 
         typename std::map<K, radix_tree_node<K, T>*>::iterator it;
 
-        for (it = node->m_children.begin; it != node->m_children.end(); ++it) {
+        for (it = node->m_children.begin(); it != node->m_children.end();
+             ++it) {
                 greedy_match(it->second, vec);
         }
 }
@@ -438,7 +471,7 @@ radix_tree<K, T>::insert(const value_type &val)
         radix_tree_node<K, T> *node = find_node(val.first, m_root, 0);
 
         if (node->m_is_leaf) {
-                node->m_value.second = val.second;
+                node->m_value->second = val.second;
                 return std::pair<iterator, bool>(node, true);
         } else if (node == m_root) {
                 return std::pair<iterator, bool>(append(m_root, val), true);
