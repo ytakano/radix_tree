@@ -60,6 +60,7 @@ public:
 
         std::pair<iterator, bool> insert(const value_type &val);
         size_type                 erase(const K &key);
+        void                      erase(iterator it);
         void                      prefix_match(const K &key,
                                                std::vector<iterator> &vec);
         void                      greedy_match(const K &key,
@@ -275,6 +276,13 @@ radix_tree<K, T>::greedy_match(radix_tree_node<K, T> *node,
              ++it) {
                 greedy_match(it->second, vec);
         }
+}
+
+template <typename K, typename T>
+void
+radix_tree<K, T>::erase(iterator it)
+{
+        return erase(it->first);
 }
 
 template <typename K, typename T>
