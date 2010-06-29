@@ -26,12 +26,6 @@ radix_join(const std::string &str1, const std::string &str2)
         return str1 + str2;
 }
 
-bool
-radix_cmp(const std::string &str1, const std::string &str2)
-{
-        return str1 == str2;
-}
-
 int
 radix_length(const std::string &str) {
         return str.size();
@@ -171,7 +165,7 @@ radix_tree<K, T>::longest_match(const K &key)
 
         key_sub = radix_substr(key, node->m_depth, radix_length(node->m_key));
 
-        if (key_sub != node->m_key)
+        if (! (key_sub == node->m_key))
                 node = node->m_parent;
 
         K nul = radix_substr(key, 0, 0);
@@ -404,8 +398,8 @@ radix_tree<K, T>::prepend(radix_tree_node<K, T> *node, const value_type &val)
         len2 = radix_length(val.first) - node->m_depth;
 
         for (count = 0; count < len1 && count < len2; count++) {
-                if (node->m_key[count] !=
-                    val.first[count + node->m_depth])
+                if (! (node->m_key[count] ==
+                       val.first[count + node->m_depth]))
                         break;
         }
 
@@ -545,7 +539,7 @@ radix_tree<K, T>::find_node(const K &key, radix_tree_node<K, T> *node,
                                 K   key_sub  = radix_substr(key, depth,
                                                             len_node);
 
-                                if (radix_cmp(key_sub, it->first)) {
+                                if (key_sub == it->first) {
                                         node   = it->second;
                                         depth += len_node;
                                         goto cont;
