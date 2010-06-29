@@ -523,6 +523,7 @@ radix_tree<K, T>::find_node(const K &key, radix_tree_node<K, T> *node,
                             int depth)
 {
         for (;;) {
+        cont:
                 if (node->m_children.size() == 0)
                         return node;
 
@@ -547,7 +548,7 @@ radix_tree<K, T>::find_node(const K &key, radix_tree_node<K, T> *node,
                                 if (radix_cmp(key_sub, it->first)) {
                                         node   = it->second;
                                         depth += len_node;
-                                        break;
+                                        goto cont;
                                 } else {
                                         return it->second;
                                 }
