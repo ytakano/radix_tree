@@ -442,10 +442,9 @@ radix_tree<K, T>::prepend(radix_tree_node<K, T> *node, const value_type &val)
                 node_b = new radix_tree_node<K, T>;
 
                 node_b->m_parent = node_a;
-                node_b->m_depth  = node_a->m_depth + count;
+                node_b->m_depth  = node->m_depth;
                 node_b->m_key    = radix_substr(val.first,
-                                                node_b->m_depth,
-                                                len2 - node_b->m_depth);
+                                                node_b->m_depth, len2 - count);
                 node_b->m_parent->m_children[node_b->m_key] = node_b;
 
 

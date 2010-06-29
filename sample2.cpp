@@ -1,4 +1,3 @@
-#include <string>
 #include <iostream>
 
 #include <arpa/inet.h>
@@ -10,14 +9,18 @@ public:
         in_addr_t addr;
         int       prefix_len;
 
-        rtentry operator[] (int n) const
+        rtentry() : addr(0), prefix_len(0) { }
+
+        in_addr_t operator[] (int n) const
         {
-                rtentry entry;
+                in_addr_t bit;
 
-                entry.addr       = (addr & (0x80000000 >> n)) << n;
-                entry.prefix_len = 1;
+                if (addr & (0x80000000 >> n))
+                        bit = 1;
+                else
+                        bit = 0;
 
-                return entry;
+                return bit;
         }
 
         bool operator== (const rtentry &rhs) const
@@ -27,7 +30,15 @@ public:
 
         bool operator< (const rtentry &rhs) const
         {
-                return addr < rhs.addr;
+                if (prefix_len == rhs.prefix_len) {
+                        return addr < rhs.addr;
+                } else {
+                        if (addr == rhs.addr) {
+                                return prefix_len < rhs.prefix_len;
+                        } else {
+                                return addr < rhs.addr;
+                        }
+                }
         }
 };
 
