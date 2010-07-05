@@ -30,14 +30,10 @@ public:
 
         bool operator< (const rtentry &rhs) const
         {
-                if (prefix_len == rhs.prefix_len) {
-                        return addr < rhs.addr;
+                if (addr == rhs.addr) {
+                        return prefix_len < rhs.prefix_len;
                 } else {
-                        if (addr == rhs.addr) {
-                                return prefix_len < rhs.prefix_len;
-                        } else {
-                                return addr < rhs.addr;
-                        }
+                        return addr < rhs.addr;
                 }
         }
 };
