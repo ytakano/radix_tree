@@ -278,7 +278,7 @@ template <typename K, typename T>
 void
 radix_tree<K, T>::erase(iterator it)
 {
-        return erase(it->first);
+        erase(it->first);
 }
 
 template <typename K, typename T>
