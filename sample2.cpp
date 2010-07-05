@@ -43,7 +43,6 @@ radix_substr(const rtentry &entry, int begin, int num)
 {
         rtentry   ret;
         in_addr_t mask;
-        int       shift;
 
         mask   = (1 << num) - 1;
         mask <<= 32 - num - begin;
