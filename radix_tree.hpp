@@ -13,19 +13,21 @@
 #include "radix_tree_it.hpp"
 #include "radix_tree_node.hpp"
 
-
+static
 std::string
 radix_substr(const std::string &str, int begin, int num)
 {
         return str.substr(begin, num);
 }
 
+static
 std::string
 radix_join(const std::string &str1, const std::string &str2)
 {
         return str1 + str2;
 }
 
+static
 int
 radix_length(const std::string &str) {
         return str.size();
