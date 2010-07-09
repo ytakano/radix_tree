@@ -44,7 +44,12 @@ radix_substr(const rtentry &entry, int begin, int num)
         rtentry   ret;
         in_addr_t mask;
 
-        mask   = (1 << num) - 1;
+        if (num == 32)
+                mask = 0;
+        else
+                mask = 1 << num;
+
+        mask  -= 1;
         mask <<= 32 - num - begin;
 
         ret.addr       = (entry.addr & mask) << begin;
