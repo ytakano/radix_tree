@@ -133,4 +133,4 @@ radix_tree_it<K, T>::operator-- ()
 }
 */
 
-#endif RADIX_TREE_IT
+#endif // RADIX_TREE_IT
