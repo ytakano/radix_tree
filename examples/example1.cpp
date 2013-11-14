@@ -1,110 +1,97 @@
 #include <string>
 #include <iostream>
+#include <cstdlib>
 
 #include "../radix_tree.hpp"
 
-using namespace std;
+radix_tree<std::string, int> tree;
 
-radix_tree<string, int> tree;
-
-void
-insert()
-{
-        tree["apache"]    = 0;
-        tree["afford"]    = 1;
-        tree["available"] = 2;
-        tree["affair"]    = 3;
-        tree["avenger"]   = 4;
-        tree["binary"]    = 5;
-        tree["bind"]      = 6;
-        tree["brother"]   = 7;
-        tree["brace"]     = 8;
-        tree["blind"]     = 9;
-        tree["bro"]       = 10;
+void insert() {
+    tree["apache"]    = 0;
+    tree["afford"]    = 1;
+    tree["available"] = 2;
+    tree["affair"]    = 3;
+    tree["avenger"]   = 4;
+    tree["binary"]    = 5;
+    tree["bind"]      = 6;
+    tree["brother"]   = 7;
+    tree["brace"]     = 8;
+    tree["blind"]     = 9;
+    tree["bro"]       = 10;
 }
 
-void
-longest_match(string key)
+void longest_match(std::string key)
 {
-        radix_tree<string, int>::iterator it;
+    radix_tree<std::string, int>::iterator it;
 
-        it = tree.longest_match(key);
+    it = tree.longest_match(key);
 
-        cout << "longest_match(\"" << key << "\"):" << endl;
+    std::cout << "longest_match(\"" << key << "\"):" << std::endl;
 
-        if (it != tree.end()) {
-                cout << "    " << it->first << ", " << it->second << endl;
-        } else {
-                cout << "    failed" << endl;
-        }
+    if (it != tree.end()) {
+        std::cout << "    " << it->first << ", " << it->second << std::endl;
+    } else {
+        std::cout << "    failed" << std::endl;
+    }
 }
 
-void
-prefix_match(string key)
+void prefix_match(std::string key)
 {
-        vector<radix_tree<string, int>::iterator> vec;
-        vector<radix_tree<string, int>::iterator>::iterator it;
+    std::vector<radix_tree<std::string, int>::iterator> vec;
+    std::vector<radix_tree<std::string, int>::iterator>::iterator it;
 
-        tree.prefix_match(key, vec);
+    tree.prefix_match(key, vec);
 
-        cout << "prefix_match(\"" << key << "\"):" << endl;
+    std::cout << "prefix_match(\"" << key << "\"):" << std::endl;
 
-        for (it = vec.begin(); it != vec.end(); ++it) {
-                cout << "    " << (*it)->first
-                     << ", " << (*it)->second
-                     << endl;
-        }
+    for (it = vec.begin(); it != vec.end(); ++it) {
+        std::cout << "    " << (*it)->first << ", " << (*it)->second << std::endl;
+    }
 }
 
-void
-greedy_match(string key)
+void greedy_match(std::string key)
 {
-        vector<radix_tree<string, int>::iterator> vec;
-        vector<radix_tree<string, int>::iterator>::iterator it;
+    std::vector<radix_tree<std::string, int>::iterator> vec;
+    std::vector<radix_tree<std::string, int>::iterator>::iterator it;
 
-        tree.greedy_match(key, vec);
+    tree.greedy_match(key, vec);
 
-        cout << "greedy_match(\"" << key << "\"):" << endl;
+    std::cout << "greedy_match(\"" << key << "\"):" << std::endl;
 
-        for (it = vec.begin(); it != vec.end(); ++it) {
-                cout << "    " << (*it)->first
-                     << ", " << (*it)->second
-                     << endl;
-        }
+    for (it = vec.begin(); it != vec.end(); ++it) {
+        std::cout << "    " << (*it)->first << ", " << (*it)->second << std::endl;
+    }
 }
 
-void
-traverse()
-{
-        radix_tree<string, int>::iterator it;
+void traverse() {
+    radix_tree<std::string, int>::iterator it;
 
-        cout << "traverse:" << endl;
-        for (it = tree.begin(); it != tree.end(); ++it) {
-                cout << "    " << it->first << ", " << it->second << endl;
-        }
+    std::cout << "traverse:" << std::endl;
+    for (it = tree.begin(); it != tree.end(); ++it) {
+        std::cout << "    " << it->first << ", " << it->second << std::endl;
+    }
 }
 
-int
-main(int argc, char **argv)
+int main()
 {
-        insert();
+    insert();
 
-        longest_match("binder");
-        longest_match("bracelet");
-        longest_match("apple");
+    longest_match("binder");
+    longest_match("bracelet");
+    longest_match("apple");
 
-        prefix_match("aff");
-        prefix_match("bi");
-        prefix_match("a");
+    prefix_match("aff");
+    prefix_match("bi");
+    prefix_match("a");
 
-        greedy_match("avoid");
-        greedy_match("bring");
-        greedy_match("attack");
+    greedy_match("avoid");
+    greedy_match("bring");
+    greedy_match("attack");
 
-        traverse();
+    traverse();
 
-        tree.erase("bro");
-        prefix_match("bro");
+    tree.erase("bro");
+    prefix_match("bro");
 
-        return 0;
+    return EXIT_SUCCESS;
 }
