@@ -140,7 +140,7 @@ find_route(const char *dst)
 }
 
 int
-main(int argc, char *argv)
+main(int argc, char **argv)
 {
         // add entries to the routing table
         add_rtentry("0.0.0.0",      0, "192.168.0.1");  // default route
