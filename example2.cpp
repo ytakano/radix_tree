@@ -111,6 +111,32 @@ add_rtentry(const char *network, int prefix_len, const char *dst)
 }
 
 void
+rm_rtentry(const char *network, int prefix_len)
+{
+        rtentry entry;
+        in_addr nw_addr;
+        in_addr_t mask;
+        int       shift;
+
+        if (prefix_len > 32)
+                return;
+
+        if (inet_aton(network, &nw_addr) == 0)
+                return;
+
+        shift = 32 - prefix_len;
+        if (shift >= 32)
+                mask = 0;
+        else
+                mask = ~((1 << shift) - 1);
+
+        entry.addr       = ntohl(nw_addr.s_addr) & mask;
+        entry.prefix_len = prefix_len;
+
+        rttable.erase(entry);
+}
+
+void
 find_route(const char *dst)
 {
         in_addr addr_dst;
@@ -165,6 +191,10 @@ main(int argc, char **argv)
         find_route("192.168.3.80");
         find_route("192.168.4.100");
         find_route("172.20.0.1");
+
+        // remove an entry
+        rm_rtentry("10.0.0.0", 8);
+        find_route("10.1.1.1");
 
         return true;
 }
