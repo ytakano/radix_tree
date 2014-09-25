@@ -473,16 +473,16 @@ radix_tree<K, T>::insert(const value_type &val)
                 m_root->m_key = nul;
         }
 
-        m_size++;
 
         radix_tree_node<K, T> *node = find_node(val.first, m_root, 0);
 
         if (node->m_is_leaf) {
-                node->m_value->second = val.second;
-                return std::pair<iterator, bool>(node, true);
+                return std::pair<iterator, bool>(node, false);
         } else if (node == m_root) {
+                m_size++;
                 return std::pair<iterator, bool>(append(m_root, val), true);
         } else {
+                m_size++;
                 int len     = radix_length(node->m_key);
                 K   key_sub = radix_substr(val.first, node->m_depth, len);
 
