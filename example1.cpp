@@ -20,6 +20,7 @@ insert()
         tree["brother"]   = 7;
         tree["brace"]     = 8;
         tree["blind"]     = 9;
+        tree["bro"]       = 10;
 }
 
 void
@@ -101,6 +102,9 @@ main(int argc, char **argv)
         greedy_match("attack");
 
         traverse();
+
+        tree.erase("bro");
+        prefix_match("bro");
 
         return 0;
 }

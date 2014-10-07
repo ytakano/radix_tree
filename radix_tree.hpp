@@ -310,10 +310,16 @@ radix_tree<K, T>::erase(const K &key)
         if (parent == m_root)
                 return 1;
 
-        grandparent = parent->m_parent;
-        grandparent->m_children.erase(parent->m_key);
+        if (parent->m_children.size() > 1)
+                return 1;
 
-        delete parent;
+        if (parent->m_children.empty()) {
+                grandparent = parent->m_parent;
+                grandparent->m_children.erase(parent->m_key);
+                delete parent;
+        } else {
+                grandparent = parent;
+        }
 
         if (grandparent == m_root) {
                 return 1;
@@ -325,6 +331,9 @@ radix_tree<K, T>::erase(const K &key)
                 it = grandparent->m_children.begin();
 
                 radix_tree_node<K, T> *uncle = it->second;
+
+                if (uncle->m_is_leaf)
+                        return 1;
 
                 uncle->m_depth = parent->m_depth;
                 uncle->m_key   = radix_join(grandparent->m_key, uncle->m_key);
