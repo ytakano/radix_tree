@@ -9,19 +9,31 @@
 #include "radix_tree_it.hpp"
 #include "radix_tree_node.hpp"
 
-static std::string radix_substr(const std::string &str, int begin, int num)
+template<typename K>
+K radix_substr(const K &key, int begin, int num);
+
+template<>
+inline std::string radix_substr<std::string>(const std::string &key, int begin, int num)
 {
-    return str.substr(begin, num);
+    return key.substr(begin, num);
 }
 
-static std::string radix_join(const std::string &str1, const std::string &str2)
+template<typename K>
+K radix_join(const K &key1, const K &key2);
+
+template<>
+inline std::string radix_join<std::string>(const std::string &key1, const std::string &key2)
 {
-    return str1 + str2;
+    return key1 + key2;
 }
 
-static int radix_length(const std::string &str)
+template<typename K>
+int radix_length(const K &key);
+
+template<>
+inline int radix_length<std::string>(const std::string &key)
 {
-    return str.size();
+    return key.size();
 }
 
 template <typename K, typename T>
