@@ -1,7 +1,7 @@
 #include <string>
 #include <iostream>
 
-#include "radix_tree.hpp"
+#include "../radix_tree.hpp"
 
 using namespace std;
 
