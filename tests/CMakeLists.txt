@@ -17,3 +17,4 @@ cxx_test("radix_tree::find" test_radix_tree_find "test_radix_tree_find.cpp" "-pt
 cxx_test("radix_tree::prefix_match" test_radix_tree_prefix_match "test_radix_tree_prefix_match.cpp" "-pthread")
 cxx_test("radix_tree::longest_match" test_radix_tree_longest_match "test_radix_tree_longest_match.cpp" "-pthread")
 cxx_test("radix_tree::greedy_match" test_radix_tree_greedy_match "test_radix_tree_greedy_match.cpp" "-pthread")
+cxx_test("radix_tree_iterator" test_radix_tree_iterator "test_radix_tree_iterator.cpp" "-pthread")
