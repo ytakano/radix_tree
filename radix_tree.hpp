@@ -55,7 +55,7 @@ public:
     iterator end();
 
     std::pair<iterator, bool> insert(const value_type &val);
-    size_type erase(const K &key);
+    bool erase(const K &key);
     void erase(iterator it);
     void prefix_match(const K &key, std::vector<iterator> &vec);
     void greedy_match(const K &key,  std::vector<iterator> &vec);
@@ -224,7 +224,7 @@ void radix_tree<K, T>::erase(iterator it)
 }
 
 template <typename K, typename T>
-typename radix_tree<K, T>::size_type radix_tree<K, T>::erase(const K &key)
+bool radix_tree<K, T>::erase(const K &key)
 {
     if (m_root == NULL)
         return 0;
