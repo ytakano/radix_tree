@@ -264,6 +264,8 @@ bool radix_tree<K, T>::erase(const K &key)
     if (parent->m_children.size() > 1)
         return 1;
 
+    int parent_depth = parent->m_depth;
+
     if (parent->m_children.empty()) {
         grandparent = parent->m_parent;
         grandparent->m_children.erase(parent->m_key);
@@ -286,7 +288,7 @@ bool radix_tree<K, T>::erase(const K &key)
         if (uncle->m_is_leaf)
             return 1;
 
-        uncle->m_depth = parent->m_depth;
+        uncle->m_depth = parent_depth;
         uncle->m_key   = radix_join(grandparent->m_key, uncle->m_key);
         uncle->m_parent = grandparent->m_parent;
 
