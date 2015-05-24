@@ -104,3 +104,17 @@ TEST(insert, operator_index_call_default_ctor)
         ASSERT_EQ(0, tree[unique_keys[i]]);
     }
 }
+
+TEST(insert, after_erase)
+{
+    std::vector<std::string> unique_keys = get_unique_keys();
+    std::random_shuffle(unique_keys.begin(), unique_keys.end());
+    tree_t tree;
+    for (size_t i = 0; i < unique_keys.size(); i++) {
+        const std::string key = unique_keys[i];
+        tree.insert( tree_t::value_type(key, rand()%100) );
+        tree.erase(key);
+        std::pair<tree_t::iterator, bool> r = tree.insert( tree_t::value_type(key, rand()%100) );
+        ASSERT_TRUE(r.second);
+    }
+}
