@@ -27,23 +27,20 @@ private:
     radix_tree_node<K, T> *m_pointee;
     radix_tree_it(radix_tree_node<K, T> *p) : m_pointee(p) { }
 
-    radix_tree_node<K, T>* increment(radix_tree_node<K, T>* node);
-    radix_tree_node<K, T>* descend(radix_tree_node<K, T>* node);
+    radix_tree_node<K, T>* increment(radix_tree_node<K, T>* node) const;
+    radix_tree_node<K, T>* descend(radix_tree_node<K, T>* node) const;
 };
 
 template <typename K, typename T>
-radix_tree_node<K, T>* radix_tree_it<K, T>::increment(radix_tree_node<K, T>* node)
+radix_tree_node<K, T>* radix_tree_it<K, T>::increment(radix_tree_node<K, T>* node) const
 {
-    radix_tree_node<K, T>* parent;
-
-    parent = node->m_parent;
+    radix_tree_node<K, T>* parent = node->m_parent;
 
     if (parent == NULL)
         return NULL;
 
-    typename radix_tree_node<K, T>::it_child it;
-
-    it = parent->m_children.find(node->m_key);
+    typename radix_tree_node<K, T>::it_child it = parent->m_children.find(node->m_key);
+    assert(it != parent->m_children.end());
     ++it;
 
     if (it == parent->m_children.end())
@@ -53,14 +50,12 @@ radix_tree_node<K, T>* radix_tree_it<K, T>::increment(radix_tree_node<K, T>* nod
 }
 
 template <typename K, typename T>
-radix_tree_node<K, T>* radix_tree_it<K, T>::descend(radix_tree_node<K, T>* node)
+radix_tree_node<K, T>* radix_tree_it<K, T>::descend(radix_tree_node<K, T>* node) const
 {
     if (node->m_is_leaf)
         return node;
 
-    typename radix_tree_node<K, T>::it_child it;
-
-    it = node->m_children.begin();
+    typename radix_tree_node<K, T>::it_child it = node->m_children.begin();
 
     assert(it != node->m_children.end());
 
@@ -94,20 +89,17 @@ bool radix_tree_it<K, T>::operator== (const radix_tree_it<K, T> &lhs) const
 template <typename K, typename T>
 const radix_tree_it<K, T>& radix_tree_it<K, T>::operator++ ()
 {
-    assert(m_pointee != NULL);
-
-    m_pointee = increment(m_pointee);
+    if (m_pointee != NULL) // it is undefined behaviour to dereference iterator that is out of bounds...
+        m_pointee = increment(m_pointee);
     return *this;
 }
 
 template <typename K, typename T>
 radix_tree_it<K, T> radix_tree_it<K, T>::operator++ (int)
 {
-    assert(m_pointee != NULL);
-
-    radix_tree_node<K, T> *node = m_pointee;
-    m_pointee = increment(m_pointee);
-    return radix_tree_it<K, T>(node);
+    radix_tree_it<K, T> copy(*this);
+    ++(*this);
+    return copy;
 }
 
 /*
