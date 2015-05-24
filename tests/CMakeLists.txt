@@ -12,3 +12,4 @@ endmacro()
 include_directories(${CMAKE_SOURCE_DIR} ${GTEST_INCLUDE_DIR})
 
 cxx_test("radix_tree::insert" test_radix_tree_insert "test_radix_tree_insert.cpp" "-pthread")
+cxx_test("radix_tree::erase" test_radix_tree_erase "test_radix_tree_erase.cpp" "-pthread")
