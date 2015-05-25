@@ -45,6 +45,8 @@ public:
     typedef radix_tree_it<K, T>   iterator;
     typedef std::size_t           size_type;
 
+    void print_tree();
+
     radix_tree() : m_size(0), m_root(NULL) { }
     ~radix_tree() {
         if (m_root != NULL) delete m_root;
@@ -85,6 +87,15 @@ private:
     radix_tree_node<K, T>* prepend(radix_tree_node<K, T> *node, const value_type &val);
     void greedy_match(radix_tree_node<K, T> *node, std::vector<iterator> &vec);
 };
+
+template <typename K, typename T>
+void radix_tree<K, T>::print_tree()
+{
+    if (m_root)
+        m_root->print_node(0);
+    
+    std::cout << std::endl;
+}
 
 template <typename K, typename T>
 void radix_tree<K, T>::prefix_match(const K &key, std::vector<iterator> &vec)
@@ -258,13 +269,14 @@ bool radix_tree<K, T>::erase(const K &key)
 
     m_size--;
 
-    if (parent == m_root)
+    if (parent == m_root) {
         return 1;
+    }
 
     if (parent->m_children.size() > 1)
         return 1;
 
-    int parent_depth = parent->m_depth;
+    //int parent_depth = parent->m_depth;
 
     if (parent->m_children.empty()) {
         grandparent = parent->m_parent;
@@ -288,7 +300,7 @@ bool radix_tree<K, T>::erase(const K &key)
         if (uncle->m_is_leaf)
             return 1;
 
-        uncle->m_depth = parent_depth;
+        uncle->m_depth = grandparent->m_depth;
         uncle->m_key   = radix_join(grandparent->m_key, uncle->m_key);
         uncle->m_parent = grandparent->m_parent;
 
@@ -363,6 +375,8 @@ radix_tree_node<K, T>* radix_tree<K, T>::prepend(radix_tree_node<K, T> *node, co
         if (! (node->m_key[count] == val.first[count + node->m_depth]) )
             break;
     }
+
+    std::cout << "prepend!" << std::endl;
 
     assert(count != 0);
 

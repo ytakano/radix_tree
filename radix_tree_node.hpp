@@ -11,6 +11,8 @@ class radix_tree_node {
     typedef std::pair<const K, T> value_type;
     typedef typename std::map<K, radix_tree_node<K, T>* >::iterator it_child;
 
+    void print_node(int n);
+
 private:
     radix_tree_node() : m_children(), m_parent(NULL), m_value(NULL), m_depth(0), m_is_leaf(false), m_key() { }
     radix_tree_node(const value_type &val);
@@ -26,6 +28,31 @@ private:
     bool m_is_leaf;
     K m_key;
 };
+
+template <typename K, typename T>
+void
+radix_tree_node<K, T>::print_node(int n)
+{
+    for (int i = 0; i < n; i++) {
+        std::cout << "+";
+    }
+
+    if (m_is_leaf) {
+        std::cout << " VALUE = " << m_value << std::endl;
+    } else {
+        std::cout << " " << m_key << ", depth = " << m_depth << std::endl;
+    }
+
+    for (it_child it = m_children.begin(); it != m_children.end(); ++it) {
+        for (int i = 0; i < n + 1; i++) {
+            std::cout << "+";
+        }
+
+        std::cout << " map_key = " << it->first << std::endl;
+
+        it->second->print_node(n + 1);
+    }
+}
 
 template <typename K, typename T>
 radix_tree_node<K, T>::radix_tree_node(const value_type &val) :
