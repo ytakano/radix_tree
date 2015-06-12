@@ -1,0 +1,32 @@
+language: cpp
+
+compiler:
+  - gcc
+  - clang
+
+os:
+  - linux
+
+sudo: false
+
+notifications:
+  email: false
+
+branches:
+  only:
+    - master
+    - /^.*travis.*$/
+
+env:
+  matrix:
+    - BUILD_TYPE=Debug
+    - BUILD_TYPE=Release
+
+before_script:
+  - mkdir -p build
+  - cd build
+  - cmake .. -DBUILD_TESTS=On -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+
+script:
+  - cmake --build . -- all --keep-going
+  - cmake --build . --target check
