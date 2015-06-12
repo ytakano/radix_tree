@@ -3,7 +3,7 @@
 radix_tree
 =====
 
-[ ![Codeship Status for kpp/radix_tree](https://codeship.com/projects/d47b4290-e2fe-0132-77af-0e8782f5ebb8/status?branch=master)](https://codeship.com/projects/81626)
+[![Build Status](https://travis-ci.org/ytakano/radix_tree.svg?branch=master)](https://travis-ci.org/ytakano/radix_tree)
 
 STL like container of radix tree in C++
 
@@ -13,7 +13,7 @@ It's a header-only library. Just include it. See [examples](examples/).
 
 Develop
 =====
-Requirements: any C++98 compiler (`g++` or `clang++`), `cmake`, `Google Test Framework`
+Requirements: any C++98 compiler (`g++` or `clang++`), `cmake`
 
 ```
 ~/radix_tree $ mkdir build && cd build
