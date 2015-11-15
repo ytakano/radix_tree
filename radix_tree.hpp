@@ -47,7 +47,7 @@ public:
 
     radix_tree() : m_size(0), m_root(NULL) { }
     ~radix_tree() {
-        if (m_root != NULL) delete m_root;
+        delete m_root;
     }
 
     size_type size()  const {
@@ -84,6 +84,9 @@ private:
     radix_tree_node<K, T>* append(radix_tree_node<K, T> *parent, const value_type &val);
     radix_tree_node<K, T>* prepend(radix_tree_node<K, T> *node, const value_type &val);
     void greedy_match(radix_tree_node<K, T> *node, std::vector<iterator> &vec);
+
+    radix_tree(const radix_tree& other); // delete
+    radix_tree& operator =(const radix_tree other); // delete
 };
 
 template <typename K, typename T>
