@@ -463,38 +463,33 @@ typename radix_tree<K, T>::iterator radix_tree<K, T>::find(const K &key)
 template <typename K, typename T>
 radix_tree_node<K, T>* radix_tree<K, T>::find_node(const K &key, radix_tree_node<K, T> *node, int depth)
 {
-    for (;;) {
-cont:
-        if (node->m_children.empty())
-            return node;
+    if (node->m_children.empty())
+        return node;
 
-        typename radix_tree_node<K, T>::it_child it;
-        int len_key = radix_length(key) - depth;
+    typename radix_tree_node<K, T>::it_child it;
+    int len_key = radix_length(key) - depth;
 
-        for (it = node->m_children.begin(); it != node->m_children.end(); ++it) {
-            if (len_key == 0) {
-                if (it->second->m_is_leaf)
-                    return it->second;
-                else
-                    continue;
-            }
-
-            if (! it->second->m_is_leaf && key[depth] == it->first[0] ) {
-                int len_node = radix_length(it->first);
-                K   key_sub  = radix_substr(key, depth, len_node);
-
-                if (key_sub == it->first) {
-                    node   = it->second;
-                    depth += len_node;
-                    goto cont;
-                } else {
-                    return it->second;
-                }
-            }
+    for (it = node->m_children.begin(); it != node->m_children.end(); ++it) {
+        if (len_key == 0) {
+            if (it->second->m_is_leaf)
+                return it->second;
+            else
+                continue;
         }
 
-        return node;
+        if (! it->second->m_is_leaf && key[depth] == it->first[0] ) {
+            int len_node = radix_length(it->first);
+            K   key_sub  = radix_substr(key, depth, len_node);
+
+            if (key_sub == it->first) {
+                return find_node(key, it->second, depth+len_node);
+            } else {
+                return it->second;
+            }
+        }
     }
+
+    return node;
 }
 
 /*
