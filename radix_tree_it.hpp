@@ -13,6 +13,8 @@ class radix_tree_it : public std::iterator<std::forward_iterator_tag, std::pair<
 
 public:
     radix_tree_it() : m_pointee(0) { }
+    radix_tree_it(const radix_tree_it& r) : m_pointee(r.m_pointee) { }
+    radix_tree_it& operator=(const radix_tree_it& r) { m_pointee = r.m_pointee; return *this; }
     ~radix_tree_it() { }
 
     std::pair<const K, T>& operator*  () const;
