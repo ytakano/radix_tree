@@ -5,6 +5,28 @@ bool is_prefix_of(const std::string& prefix, const std::string& str) {
     return p.first == prefix.end();
 }
 
+void check_nonexistent_prefixes(tree_t& tree)
+{
+    SCOPED_TRACE("should never be found");
+    const std::string never_found_strings[] = {
+        "abcdfe", "abcdefe", "abe", "cc", "abcdec", "bcdefc"
+    };
+    std::vector<std::string> should_never_be_found = make_vector(never_found_strings);
+    for (size_t i = 0; i < should_never_be_found.size(); i++) {
+        const std::string key = should_never_be_found[i];
+        SCOPED_TRACE(key);
+        vector_found_t vec;
+        tree.prefix_match(key, vec);
+        ASSERT_EQ(0u, vec.size());
+    }
+}
+
+TEST(prefix_match, empty_tree)
+{
+    tree_t tree;
+    check_nonexistent_prefixes(tree);
+}
+
 TEST(prefix_match, complex_tree)
 {
     tree_t tree;
@@ -22,7 +44,7 @@ TEST(prefix_match, complex_tree)
         for (tree_t::iterator it = tree.begin(); it != tree.end(); ++it) {
             vector_found_t vec;
             tree.prefix_match(it->first, vec);
-            ASSERT_GE(vec.size(), 1);
+            ASSERT_GE(vec.size(), 1u);
             map_found_t map_found = vec_found_to_map(vec);
             ASSERT_NE(map_found.end(), map_found.find(it->first)) << "there is no such key in found";
             ASSERT_EQ(map_found[it->first], it->second);
@@ -70,18 +92,5 @@ TEST(prefix_match, complex_tree)
             ASSERT_EQ(prefix_it->second, vec_found_to_map(vec));
         }
     }
-    {
-        SCOPED_TRACE("should never be found");
-        const std::string never_found_strings[] = {
-            "abcdfe", "abcdefe", "abe", "cc", "abcdec", "bcdefc"
-        };
-        std::vector<std::string> should_never_be_found = make_vector(never_found_strings);
-        for (size_t i = 0; i < should_never_be_found.size(); i++) {
-            const std::string key = should_never_be_found[i];
-            SCOPED_TRACE(key);
-            vector_found_t vec;
-            tree.prefix_match(key, vec);
-            ASSERT_EQ(0, vec.size());
-        }
-    }
+    check_nonexistent_prefixes(tree);
 }

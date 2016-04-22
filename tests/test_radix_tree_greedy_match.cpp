@@ -21,7 +21,7 @@ TEST(greedy_match, complex_tree)
         for (tree_t::iterator it = tree.begin(); it != tree.end(); ++it) {
             vector_found_t vec;
             tree.greedy_match(it->first, vec);
-            ASSERT_GE(vec.size(), 1);
+            ASSERT_GE(vec.size(), 1u);
             map_found_t map_found = vec_found_to_map(vec);
             ASSERT_NE(map_found.end(), map_found.find(it->first)) << "there is no such key in found";
             ASSERT_EQ(map_found[it->first], it->second);

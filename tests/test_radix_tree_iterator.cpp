@@ -40,7 +40,7 @@ TEST(iterator, distance)
                 tree.insert( tree_t::value_type(key, rand()%100) );
             }
         }
-        ASSERT_EQ(unique_keys.size(), std::distance(tree.begin(), tree.end()) );
+        ASSERT_EQ(unique_keys.size(), size_t(std::distance(tree.begin(), tree.end())) );
     }
 }
 
@@ -103,7 +103,7 @@ TEST(iterator, std__copy)
     std::map<std::string, int> map;
     std::copy(tree.begin(), tree.end(), std::inserter(map, map.end()));
 
-    ASSERT_EQ(map.size(), std::distance(tree.begin(), tree.end()) );
+    ASSERT_EQ(map.size(), size_t(std::distance(tree.begin(), tree.end())) );
     for(tree_t::iterator it = tree.begin(); it != tree.end(); ++it) {
         ASSERT_NE(map.end(), map.find(it->first));
     }

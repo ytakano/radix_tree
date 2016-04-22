@@ -23,23 +23,29 @@ function(add_gtest_as_external)
         )
     endif()
 
+
+    # warnings disabled only for gtest sources (googletest is not perfect...)
+    set (gtest_no_warnings_sources "-Wno-missing-field-initializers -Wno-unused-private-field")
+    set (gtest_cxx_flags "${CMAKE_CXX_FLAGS} ${gtest_no_warnings_sources}")
+
     ExternalProject_Add(
         gtest-external ${gtest_url}
         PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gtest
         INSTALL_COMMAND ""
+        # We don't want to check compiler by subproject again
+        CMAKE_CACHE_ARGS
+            -DCMAKE_CXX_COMPILER:PATH=${CMAKE_CXX_COMPILER}
+            -DCMAKE_CXX_COMPILER_ID_RUN:BOOL=TRUE
+            -DCMAKE_CXX_COMPILER_WORKS:BOOL=TRUE
+            -DCMAKE_CXX_COMPILER_FORCED:BOOL=TRUE
+            -DCMAKE_C_COMPILER:PATH=${CMAKE_C_COMPILER}
+            -DCMAKE_C_COMPILER_ID_RUN:BOOL=TRUE
+            -DCMAKE_C_COMPILER_WORKS:BOOL=TRUE
+            -DCMAKE_C_COMPILER_FORCED:BOOL=TRUE
+            -DCMAKE_CXX_FLAGS:STRING=${gtest_cxx_flags}
         CMAKE_ARGS
-            -Dgtest_disable_pthreads=Off
-            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-            # We don't want to check compiler by subproject again
-            -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-            -DCMAKE_CXX_COMPILER_ID_RUN=TRUE
-            -DCMAKE_CXX_COMPILER_WORKS=TRUE
-            -DCMAKE_CXX_COMPILER_FORCED=TRUE
-            -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
-            -DCMAKE_C_COMPILER_ID_RUN=TRUE
-            -DCMAKE_C_COMPILER_WORKS=TRUE
-            -DCMAKE_C_COMPILER_FORCED=TRUE
-            -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}\ -Wno-missing-field-initializers\ -Wno-long-long
+            -Dgtest_disable_pthreads:BOOL=Off
+            -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
     )
     ExternalProject_Get_Property(gtest-external source_dir binary_dir)
     set(GTEST_INCLUDE_DIR "${source_dir}/include" CACHE PATH "Path to directory." FORCE)
