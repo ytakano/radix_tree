@@ -28,5 +28,5 @@ before_script:
   - cmake .. -DBUILD_TESTS=On -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
 
 script:
-  - cmake --build . -- all --keep-going VERBOSE=1
+  - cmake --build . -- all --keep-going
   - cmake --build . --target check
