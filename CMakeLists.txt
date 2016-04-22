@@ -5,7 +5,7 @@ project(radix-tree)
 set (CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 install(FILES radix_tree.hpp radix_tree_it.hpp radix_tree_node.hpp DESTINATION include/radix_tree)
 
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -pedantic")
 option(BUILD_TESTS "Should we build tests?" OFF)
 
 if (BUILD_TESTS)
