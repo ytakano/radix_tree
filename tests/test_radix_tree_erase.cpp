@@ -21,7 +21,7 @@ TEST(erase, change_size)
                 tree.erase(key);
                 ASSERT_EQ(size_before_erase - 1, tree.size());
             }
-            ASSERT_EQ(0, tree.size());
+            ASSERT_EQ(0u, tree.size());
         }
     }
 }
