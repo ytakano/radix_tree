@@ -4,7 +4,7 @@ add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure)
 
 macro(cxx_test pretty_name bin_name sources libs)
     add_executable(${bin_name} ${sources})
-    target_link_libraries(${bin_name} supc++ ${libs} ${GTEST_BOTH_LIBRARIES})
+    target_link_libraries(${bin_name} ${libs} ${GTEST_BOTH_LIBRARIES})
     add_test(${pretty_name} ${bin_name})
     add_dependencies(check ${bin_name})
 endmacro()
