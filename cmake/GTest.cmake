@@ -15,7 +15,7 @@ function(add_gtest_as_external)
         set (gtest_url URL ${gtest_local})
         FIND_PACKAGE_MESSAGE(GTest "Trying to build GTest from local ${gtest_local}" "[${gtest_local}]")
     else()
-        set (gtest_web_url "https://googletest.googlecode.com/files/gtest-1.7.0.zip")
+        set (gtest_web_url "https://github.com/google/googletest/archive/release-1.7.0.zip")
         FIND_PACKAGE_MESSAGE(GTest "Trying to build GTest from ${gtest_web_url}" "[${gtest_web_url}]")
         set (gtest_url
             URL ${gtest_web_url}
