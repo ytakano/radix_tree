@@ -5,8 +5,8 @@
 #include <functional>
 
 // forward declaration
-template <typename K, typename T, class Compare = std::less<K>> class radix_tree;
-template <typename K, typename T, class Compare = std::less<K>> class radix_tree_node;
+template <typename K, typename T, class Compare = std::less<K> > class radix_tree;
+template <typename K, typename T, class Compare = std::less<K> > class radix_tree_node;
 
 template <typename K, typename T, class Compare = std::less<K>>
 class radix_tree_it : public std::iterator<std::forward_iterator_tag, std::pair<K, T> > {
