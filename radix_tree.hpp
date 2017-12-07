@@ -46,7 +46,8 @@ public:
     typedef radix_tree_it<K, T, Compare>   iterator;
     typedef std::size_t           size_type;
 
-    radix_tree() : m_size(0), m_root(NULL) { }
+	radix_tree() : m_size(0), m_root(NULL), m_predicate(Compare()) { }
+	explicit radix_tree(Compare pred) : m_size(0), m_root(NULL), m_predicate(pred) { }
     ~radix_tree() {
         delete m_root;
     }
@@ -79,6 +80,8 @@ public:
 private:
     size_type m_size;
     radix_tree_node<K, T, Compare>* m_root;
+
+	Compare m_predicate;
 
     radix_tree_node<K, T, Compare>* begin(radix_tree_node<K, T, Compare> *node);
     radix_tree_node<K, T, Compare>* find_node(const K &key, radix_tree_node<K, T, Compare> *node, int depth);
@@ -318,7 +321,7 @@ radix_tree_node<K, T, Compare>* radix_tree<K, T, Compare>::append(radix_tree_nod
     len   = radix_length(val.first) - depth;
 
     if (len == 0) {
-        node_c = new radix_tree_node<K, T, Compare>(val);
+        node_c = new radix_tree_node<K, T, Compare>(val, m_predicate);
 
         node_c->m_depth   = depth;
         node_c->m_parent  = parent;
@@ -329,7 +332,7 @@ radix_tree_node<K, T, Compare>* radix_tree<K, T, Compare>::append(radix_tree_nod
 
         return node_c;
     } else {
-        node_c = new radix_tree_node<K, T, Compare>(val);
+        node_c = new radix_tree_node<K, T, Compare>(val, m_predicate);
 
         K key_sub = radix_substr(val.first, depth, len);
 
@@ -340,7 +343,7 @@ radix_tree_node<K, T, Compare>* radix_tree<K, T, Compare>::append(radix_tree_nod
         node_c->m_key    = key_sub;
 
 
-        node_cc = new radix_tree_node<K, T, Compare>(val);
+		node_cc = new radix_tree_node<K, T, Compare>(val, m_predicate);
         node_c->m_children[nul] = node_cc;
 
         node_cc->m_depth   = depth + len;
@@ -370,7 +373,7 @@ radix_tree_node<K, T, Compare>* radix_tree<K, T, Compare>::prepend(radix_tree_no
 
     node->m_parent->m_children.erase(node->m_key);
 
-    radix_tree_node<K, T, Compare> *node_a = new radix_tree_node<K, T, Compare>;
+    radix_tree_node<K, T, Compare> *node_a = new radix_tree_node<K, T, Compare>(m_predicate);
 
     node_a->m_parent = node->m_parent;
     node_a->m_key    = radix_substr(node->m_key, 0, count);
@@ -387,7 +390,7 @@ radix_tree_node<K, T, Compare>* radix_tree<K, T, Compare>::prepend(radix_tree_no
     if (count == len2) {
         radix_tree_node<K, T, Compare> *node_b;
 
-        node_b = new radix_tree_node<K, T, Compare>(val);
+        node_b = new radix_tree_node<K, T, Compare>(val, m_predicate);
 
         node_b->m_parent  = node_a;
         node_b->m_key     = nul;
@@ -399,14 +402,14 @@ radix_tree_node<K, T, Compare>* radix_tree<K, T, Compare>::prepend(radix_tree_no
     } else {
         radix_tree_node<K, T, Compare> *node_b, *node_c;
 
-        node_b = new radix_tree_node<K, T, Compare>;
+        node_b = new radix_tree_node<K, T, Compare>(m_predicate);
 
         node_b->m_parent = node_a;
         node_b->m_depth  = node->m_depth;
         node_b->m_key    = radix_substr(val.first, node_b->m_depth, len2 - count);
         node_b->m_parent->m_children[node_b->m_key] = node_b;
 
-        node_c = new radix_tree_node<K, T, Compare>(val);
+        node_c = new radix_tree_node<K, T, Compare>(val, m_predicate);
 
         node_c->m_parent  = node_b;
         node_c->m_depth   = radix_length(val.first);
@@ -424,7 +427,7 @@ std::pair<typename radix_tree<K, T, Compare>::iterator, bool> radix_tree<K, T, C
     if (m_root == NULL) {
         K nul = radix_substr(val.first, 0, 0);
 
-        m_root = new radix_tree_node<K, T, Compare>;
+        m_root = new radix_tree_node<K, T, Compare>(m_predicate);
         m_root->m_key = nul;
     }
 
