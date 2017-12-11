@@ -77,6 +77,22 @@ public:
 
     T& operator[] (const K &lhs);
 
+	template<class _UnaryPred> void remove_if(_UnaryPred pred)
+	{
+		radix_tree<K, T, Compare>::iterator backIt;
+		for (radix_tree<K, T, Compare>::iterator it = begin(); it != end(); it = backIt)
+		{
+			backIt = it;
+			backIt++;
+			K toDelete = (*it).first;
+			if (pred(toDelete))
+			{
+				erase(toDelete);
+			}
+		}
+	}
+
+
 private:
     size_type m_size;
     radix_tree_node<K, T, Compare>* m_root;
@@ -164,7 +180,7 @@ typename radix_tree<K, T, Compare>::iterator radix_tree<K, T, Compare>::begin()
 {
     radix_tree_node<K, T, Compare> *node;
 
-    if (m_root == NULL)
+    if (m_root == NULL || m_size == 0)
         node = NULL;
     else
         node = begin(m_root);
@@ -177,6 +193,7 @@ radix_tree_node<K, T, Compare>* radix_tree<K, T, Compare>::begin(radix_tree_node
 {
     if (node->m_is_leaf)
         return node;
+
 
     assert(!node->m_children.empty());
 
