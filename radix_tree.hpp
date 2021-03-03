@@ -34,7 +34,7 @@ int radix_length(const K &key);
 template<>
 inline int radix_length<std::string>(const std::string &key)
 {
-    return key.size();
+    return static_cast<int>(key.size());
 }
 
 template <typename K, typename T, typename Compare>
