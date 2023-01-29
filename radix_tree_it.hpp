@@ -49,7 +49,7 @@ radix_tree_node<K, T, Compare>* radix_tree_it<K, T, Compare>::increment(radix_tr
     if (it == parent->m_children.end())
         return increment(parent);
     else
-        return descend(it->second.get());
+        return descend(it->second);
 }
 
 template <typename K, typename T, typename Compare>
@@ -62,19 +62,19 @@ radix_tree_node<K, T, Compare>* radix_tree_it<K, T, Compare>::descend(radix_tree
 
     assert(it != node->m_children.end());
 
-    return descend(it->second.get());
+    return descend(it->second);
 }
 
 template <typename K, typename T, typename Compare>
 std::pair<const K, T>& radix_tree_it<K, T, Compare>::operator* () const
 {
-    return *m_pointee->m_value.get();
+    return *m_pointee->m_value;
 }
 
 template <typename K, typename T, typename Compare>
 std::pair<const K, T>* radix_tree_it<K, T, Compare>::operator-> () const
 {
-    return m_pointee->m_value.get();
+    return m_pointee->m_value;
 }
 
 template <typename K, typename T, typename Compare>
